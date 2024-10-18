@@ -20,8 +20,21 @@
                 <button type="submit">Submit!</button>
             </form>
         </div>
-        <h1 class="ch" style="color: red;">Wait for the word to be revealed...</h1>
+        <h1 class="ch" style="color: red;" id="msg">Wait for the word to be revealed...</h1>
         <progress id="progress-2"></progress>
     </main>
+    <script type="text/javascript">
+    let msg = document.getElementById('msg');
+    let code = "{{ code }}";
+    setInterval(async () => {
+        let status_resp = await fetch(`/api/${code}/status`);
+        let status = await status_resp.text();
+        let message = status;
+        if (message == '@not-started') {
+            message = 'Wait for the word to be revealed...';
+        }
+        msg.innerText = message;
+    }, 250);
+    </script>
 </body>
 </html>
