@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lying</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" integrity="sha384-7P0NVe9LPDbUCAF+fH2R8Egwz1uqNH83Ns/bfJY0fN2XCDBMUI2S9gGzIOIRBKsA" crossorigin="anonymous">
+    <style>html { margin: 20px; } .ch { text-align: center; }</style>
+</head>
+<body>
+    <header>
+        <h1 class="ch">You're in!</h1>
+        <h3 class="ch">When the word is revealed, you'll have 10 seconds to submit a short description</h3>
+    </header>
+    <main>
+        <div id="form">
+            <form action="/done_speaker.html" method="post">
+                <label for="desc">Short Description:</label>
+                <input name="desc" type="text" placeholder="e.g. 'famous drunkard'">
+                <button type="submit">Submit!</button>
+            </form>
+        </div>
+        <h1 class="ch" style="color: red;">Wait for the word to be revealed...</h1>
+    </main>
+</body>
+</html>
