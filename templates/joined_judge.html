@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lying</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" integrity="sha384-7P0NVe9LPDbUCAF+fH2R8Egwz1uqNH83Ns/bfJY0fN2XCDBMUI2S9gGzIOIRBKsA" crossorigin="anonymous">
-    <style>html { margin: 20px; } .ch { text-align: center; } .aa { display: flex; width: fit-content; margin-inline: auto; } .aa h1 { margin: 0; font-size: 65pt; }</style>
+    <style>html { margin: 20px; } .ch { text-align: center; } .aa { display: flex; width: fit-content; margin-inline: auto; } .aa h1 { margin: 0; font-size: 65pt; } .sub { font-size: 50pt; } .guesslink { font-size: 30pt; }</style>
 </head>
 <body>
     <header>
@@ -43,16 +43,38 @@
         articlename.innerHTML = article;
     };
     let speakers_added = 0;
-    setInterval(async () => {
+    let interval_update = null;
+    interval_update = setInterval(async () => {
         let status_resp = await fetch(`/api/${code}/status`);
         let status = await status_resp.text();
         if (status == '@live') {
             let spkrdescs = document.getElementsByClassName('spkrdesc');
             let guesslinks = document.getElementsByClassName('guesslink');
+            let speakers_resp = await fetch(`/api/${code}/speakers`);
+            let speakers_found = (await speakers_resp.json())['list'];
+            let bindings = new Map();
+            for (const spkr of speakers_found) {
+                bindings.set(spkr.ne, {
+                    spkr,
+                    spkrdesc: null,
+                });
+            }
+            for (const spkrdesc of spkrdescs) {
+                let ne = spkrdesc.attributes['data-ne'].nodeValue;
+                console.log(ne);
+                console.log(spkrdesc);
+                bindings.get(ne).spkrdesc = spkrdesc;
+            }
+            console.log(bindings);
+            for (const [ne, obj] of bindings) {
+                obj.spkrdesc.innerText = obj.spkr.desc;
+            }
+            // todo
+            while (interval_update == null) {}
+            clearInterval(interval_update);
         } else {
             let speakers_resp = await fetch(`/api/${code}/speakers`);
             let speakers_json = await speakers_resp.json();
-            console.log(speakers_json);
             let speakers_found = speakers_json['list'];
             if (speakers_found.length > speakers_added) {
                 for (const new_speaker of speakers_found.slice(speakers_added)) {
@@ -60,11 +82,11 @@
                     let name = atob(ne);
                     let desc = new_speaker.desc;
                     let new_card = document.createElement('article');
+                    new_card.className = 'sub';
                     new_card.innerHTML = `
                         <strong>${name}</strong> says
                         <strong ><span class="spkrdesc" data-ne="${ne}">...</span></strong>
-                        <br>
-                        <a class="guesslink" data-ne="${ne}">Guess them!</a>
+                        <a class="guesslink" data-ne="${ne}" style="float: right;">Guess them!</a>
                     `;
                     speakers.appendChild(new_card);
                 }
