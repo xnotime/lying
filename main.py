@@ -14,10 +14,10 @@ def index():
 games = {}
 
 words = [
-    ['fight', 'destroy', 'eat', 'drink', 'burn', 'build', 'milk', 'hug', 'smash'],
+    ['lick', 'eat', 'drink', 'taste', 'hug', 'befriend', 'deify'],
     [ str(i) for i in range(2, 112) ],
-    ['dirty', 'clean', 'yummy', 'gross', 'boring', 'exciting', 'sketchy'],
-    ['ovens', 'cows', 'sheep', 'tvs', 'cameras', 'sewers', 'pianos', 'cables'],
+    ['dirty', 'tasty', 'yummy', 'gross', 'sketchy', 'wet', 'crying', 'scary', 'mysterious'],
+    ['ovens', 'cows', 'sheep', 'tvs', 'cameras', 'sewers', 'pianos', 'cables', 'pizzas', 'chairs', 'floors', 'tacos', 'trees', 'pigs', 'rats', 'mice', 'trumpets', 'lamps'],
 ]
 
 @app.route('/bad_code.html')
