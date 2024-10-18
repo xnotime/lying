@@ -55,3 +55,13 @@ class Game:
         ][0]
         self.speakers[idx].desc = desc
         print(desc)
+    
+    def speakers_json(self):
+        return {
+            'list': [
+                {
+                    'ne': spkr.ne,
+                    'desc': spkr.desc,
+                } for spkr in self.speakers
+            ]
+        }

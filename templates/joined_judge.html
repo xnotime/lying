@@ -25,6 +25,7 @@
     <script type="text/javascript">
     let readylink = document.getElementById('readylink');
     let articlename = document.getElementById('articlename');
+    let speakers = document.getElementById('speakers');
     let code = '{{ code }}'; // kinda xss-y but should be fine
     readylink.onclick = async () => {
         let status = '@not-started';
@@ -41,6 +42,23 @@
         let article = await article_resp.text();
         articlename.innerHTML = article;
     };
+    let speakers_added = 0;
+    setInterval(async () => {
+        let speakers_resp = await fetch(`/api/${code}/speakers`);
+        let speakers_json = await speakers_resp.json();
+        console.log(speakers_json);
+        let speakers_found = speakers_json['list'];
+        if (speakers_found.length > speakers_added) {
+            for (const new_speaker of speakers_found.slice(speakers_added)) {
+                let name = atob(new_speaker.ne);
+                let desc = new_speaker.desc;
+                let new_card = document.createElement('article');
+                new_card.innerText = name;
+                speakers.appendChild(new_card);
+            }
+            speakers_added = speakers_found.length;
+        }
+    }, 250);
     </script>
 </body>
 </html>

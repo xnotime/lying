@@ -71,3 +71,8 @@ def api_chosen_article(code: str):
 def api_status(code: str):
     assert code in games
     return games[code].status()
+
+@app.route('/api/<code>/speakers')
+def api_speakers(code: str):
+    assert code in games
+    return games[code].speakers_json()
