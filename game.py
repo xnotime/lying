@@ -48,3 +48,10 @@ class Game:
         if time_left <= 0:
             self.live = True
         return f'{time_left}s left'
+    
+    def attach_desc(self, ne: str, desc: str):
+        idx = [
+            i for i, spkr in enumerate(self.speakers) if spkr.ne == ne
+        ][0]
+        self.speakers[idx].desc = desc
+        print(desc)

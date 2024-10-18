@@ -10,11 +10,11 @@
 <body>
     <header>
         <h1 class="ch">You're in!</h1>
-        <h3 class="ch">When the word is revealed, you'll have 10 seconds to submit a short description.</h3>
+        <h3 class="ch" id="subheading">When the word is revealed, you'll have 10 seconds to submit a short description.</h3>
     </header>
     <main>
         <div style="display: none" id="form">
-            <form action="/done_speaker.html" method="post">
+            <form action="#submitted" method="post">
                 <label for="desc">Short Description:</label>
                 <input name="desc" type="text" placeholder="e.g. 'famous drunkard'">
                 <button type="submit">Submit!</button>
@@ -27,37 +27,46 @@
     let form = document.getElementById('form');
     let msg = document.getElementById('msg');
     let prog = document.getElementById('progress-2');
+    let subheading = document.getElementById('subheading');
     let code = "{{ code }}";
     let ask_interval = null;
     let time_left = 10_000;
-    setInterval(async () => {
-        let status_resp = await fetch(`/api/${code}/status`);
-        let status = await status_resp.text();
-        let message = status;
-        if (message == '@not-started') {
-            message = 'Wait for the word to be revealed...';
-            form.style.display = 'none';
-        } else if (message == '@live') {
-            clearInterval(ask_interval);
-            message = 'Explain yourself, mortal!';
-            form.style.display = 'none';
-            prog.style.display = 'none';
-        } else {
-            form.style.display = 'inline';
-            prog.id = 'progress-1';
-            if (ask_interval == null) {
-                prog.value = '1';
-                ask_interval = setInterval(() => {
-                    if (time_left > 0) {
-                        console.log(time_left);
-                        prog.value = `${(time_left / 10_000)}`;
-                        time_left -= 10;
-                    }
-                }, 10);
+    if (window.location.hash == '#submitted') {
+        msg.innerText = 'Explain yourself, mortal!';
+        form.style.display = 'none';
+        prog.style.display = 'none';
+        subheading.innerText = 'Your description was submitted.';
+    } else {
+        setInterval(async () => {
+            let status_resp = await fetch(`/api/${code}/status`);
+            let status = await status_resp.text();
+            let message = status;
+            if (message == '@not-started') {
+                message = 'Wait for the word to be revealed...';
+                form.style.display = 'none';
+            } else if (message == '@live') {
+                clearInterval(ask_interval);
+                message = 'Explain yourself, mortal!';
+                form.style.display = 'none';
+                prog.style.display = 'none';
+                subheading.innerHTML = 'You did not submit a description. A wee bit sus, no?'
+            } else {
+                form.style.display = 'inline';
+                prog.id = 'progress-1';
+                if (ask_interval == null) {
+                    prog.value = '1';
+                    ask_interval = setInterval(() => {
+                        if (time_left > 0) {
+                            console.log(time_left);
+                            prog.value = `${(time_left / 10_000)}`;
+                            time_left -= 10;
+                        }
+                    }, 10);
+                }
             }
-        }
-        msg.innerText = message;
-    }, 250);
+            msg.innerText = message;
+        }, 250);
+    }
     </script>
 </body>
 </html>

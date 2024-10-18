@@ -48,10 +48,12 @@ def join():
     else:
         raise KeyError('Role doesnt exist')
 
-@app.route('/joined/<code>/<role>/<ne>')
+@app.route('/joined/<code>/<role>/<ne>', methods= ['GET', 'POST'])
 def joined(code: str, role: str, ne: str):
     assert role in ('speaker', 'judge')
     assert code in games
+    if request.method.upper() == 'POST':
+        games[code].attach_desc(ne, request.form['desc'])
     return render_template(f'joined_{role}.html', code= code, ne= ne)
 
 @app.route('/api/<code>/start')
