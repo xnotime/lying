@@ -61,13 +61,15 @@
             }
             for (const spkrdesc of spkrdescs) {
                 let ne = spkrdesc.attributes['data-ne'].nodeValue;
-                console.log(ne);
-                console.log(spkrdesc);
                 bindings.get(ne).spkrdesc = spkrdesc;
             }
             console.log(bindings);
             for (const [ne, obj] of bindings) {
-                obj.spkrdesc.innerText = obj.spkr.desc;
+                if (obj.spkr.desc) {
+                    obj.spkrdesc.innerText = obj.spkr.desc;
+                } else {
+                    obj.spkrdesc.innerText = '[no response]';
+                }
             }
             // todo
             while (interval_update == null) {}
