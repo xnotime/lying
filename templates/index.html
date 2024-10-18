@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lying</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" integrity="sha384-7P0NVe9LPDbUCAF+fH2R8Egwz1uqNH83Ns/bfJY0fN2XCDBMUI2S9gGzIOIRBKsA" crossorigin="anonymous">
+    <style>html { margin: 20px; } h1.ch { text-align: center; }</style>
+</head>
+<body>
+    <header>
+        <h1 class="ch">𝑛 of these People are Lying</h1>
+    </header>
+    <main>
+        <form action="/join.html" method="post">
+            <label for="nick">Nickname:</label>
+            <input name="nick" type="text" placeholder="Choose something everyone will recognize you as...">
+            <label for="role">Role: </label>
+            <select name="role" id="role">
+                <option value="speaker" selected>Speaker (chooses article, either tells the truth or lies)</option>
+                <option value="judge">Judge (listens, guesses which speaker is lying)</option>
+            </select>
+            <div id="articlestuff">
+                <label for="wlink">Chosen article:</label>
+                <input name="wlink" type="text" placeholder="Enter a Wikipedia link here...">
+                <label for="gamecode">Game code:</label>
+                <input name="gamecode" type="text" placeholder="Ask your judge for the code...">
+            </div>
+            <button type="submit">Submit!</button>
+        </form>
+    </main>
+    <script type="text/javascript">
+    let role = document.getElementById('role');
+    let articlestuff = document.getElementById('articlestuff');
+    role.onchange = () => {
+        articlestuff.style.display =
+            (role.value == 'speaker') ? 'inline' : 'none';
+    };
+    (role.onchange)();
+    </script>
+</body>
+</html>
