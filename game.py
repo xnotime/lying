@@ -65,3 +65,6 @@ class Game:
                 } for spkr in self.speakers
             ]
         }
+    
+    def guess(self, ne: str):
+        return self.speakers[self.chosen].ne == ne

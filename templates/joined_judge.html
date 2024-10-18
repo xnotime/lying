@@ -71,7 +71,16 @@
                     obj.spkrdesc.innerText = '[no response]';
                 }
             }
-            // todo
+            for (const guesslink of guesslinks) {
+                let ne = guesslink.attributes['data-ne'].nodeValue;
+                guesslink.style.display = 'inline';
+                guesslink.onclick = async () => {
+                    let guess_resp = await fetch(`/api/${code}/guess/${ne}`);
+                    let color = await guess_resp.text();
+                    guesslink.parentElement.style.color = color;
+                    guesslink.style.display = 'none';
+                };
+            }
             while (interval_update == null) {}
             clearInterval(interval_update);
         } else {
@@ -88,7 +97,7 @@
                     new_card.innerHTML = `
                         <strong>${name}</strong> says
                         <strong ><span class="spkrdesc" data-ne="${ne}">...</span></strong>
-                        <a class="guesslink" data-ne="${ne}" style="float: right;">Guess them!</a>
+                        <a class="guesslink" data-ne="${ne}" style="float: right; display: none;">Guess them!</a>
                     `;
                     speakers.appendChild(new_card);
                 }

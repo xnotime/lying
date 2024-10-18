@@ -76,3 +76,8 @@ def api_status(code: str):
 def api_speakers(code: str):
     assert code in games
     return games[code].speakers_json()
+
+@app.route('/api/<code>/guess/<ne>')
+def api_guess(code: str, ne: str):
+    assert code in games
+    return 'green' if games[code].guess(ne) else 'red'
