@@ -14,10 +14,10 @@ def index():
 games = {}
 
 words = [
-    ['fight', 'destroy', 'eat', 'drink', 'burn', 'build', 'milk', 'smash'],
+    ['fight', 'destroy', 'eat', 'drink', 'burn', 'build', 'milk', 'hug', 'smash'],
     [ str(i) for i in range(2, 112) ],
     ['dirty', 'clean', 'yummy', 'gross', 'boring', 'exciting', 'sketchy'],
-    ['ovens', 'cows', 'sheep', 'tvs', 'cameras', 'sewers', 'ankles', 'cables'],
+    ['ovens', 'cows', 'sheep', 'tvs', 'cameras', 'sewers', 'pianos', 'cables'],
 ]
 
 @app.route('/bad_code.html')
@@ -52,3 +52,7 @@ def join():
 def joined(code: str, role: str, ne: str):
     assert role in ('speaker', 'judge')
     return render_template(f'joined_{role}.html', code= code, ne= ne)
+
+@app.route('/api/<code>/start')
+def api_start(code: str):
+    return games[code].start_game()

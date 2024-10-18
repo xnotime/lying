@@ -5,23 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lying</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" integrity="sha384-7P0NVe9LPDbUCAF+fH2R8Egwz1uqNH83Ns/bfJY0fN2XCDBMUI2S9gGzIOIRBKsA" crossorigin="anonymous">
-    <style>html { margin: 20px; } .ch { text-align: center; }</style>
+    <style>html { margin: 20px; } .ch { text-align: center; } .aa { display: flex; width: fit-content; margin-inline: auto; } .aa h1 { margin: 0; font-size: 65pt; }</style>
 </head>
 <body>
     <header>
         <h1 class="ch">You're in! The code is <code>{{ code }}</code>.</h1>
     </header>
     <main>
-        <div class="ch" style="padding: 20px">
-            <button id="readybtn">Everyone ready?</button>
-        </div>
-        <article id="article" aria-busy="true" class="ch">
-            <h1 id="articlename"></h1>
+        <article class="aa">
+            <h1 id="articlename">
+                <a id="readylink">Click to Start</a>
+            </h1>
         </article>
         <section>
             <div class="grid" id="speakers">
             </div>
         </section>
     </main>
+    <script type="text/javascript">
+    let readylink = document.getElementById('readylink');
+    let articlename = document.getElementById('articlename');
+    readylink.onclick = async () => {
+        let resp = await fetch(`/api/${code}/start`);
+        let article = await resp.text();
+        articlename.innerHTML = article;
+    };
+    </script>
 </body>
 </html>
