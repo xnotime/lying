@@ -39,6 +39,8 @@ def join():
         code = request.form['gamecode']
         if code not in games:
             return redirect('/bad_code.html')
+        if request.form['wlink'].startswith('https://'):
+            return redirect('/name_not_links_ya_fool.html')
         games[code].add_speaker(
             Speaker(ne, request.form['wlink'])
         )
