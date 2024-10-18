@@ -17,6 +17,7 @@
                 <a id="readylink">Click to Start</a>
             </h1>
         </article>
+        <progress id="progress-1" value="1" style="display: none;"></progress>
         <section>
             <div id="speakers">
             </div>
@@ -26,6 +27,9 @@
     let readylink = document.getElementById('readylink');
     let articlename = document.getElementById('articlename');
     let speakers = document.getElementById('speakers');
+    let prog = document.getElementById('progress-1');
+    let ask_interval;
+    let time_left = 10_000;
     let code = '{{ code }}'; // kinda xss-y but should be fine
     readylink.onclick = async () => {
         let status = '@not-started';
@@ -41,6 +45,14 @@
         let article_resp = await fetch(`/api/${code}/chosen/article`);
         let article = await article_resp.text();
         articlename.innerHTML = article;
+        prog.style.display = 'inline';
+        ask_interval = setInterval(() => {
+            if (time_left > 0) {
+                console.log(time_left);
+                prog.value = `${(time_left / 10_000)}`;
+                time_left -= 10;
+            }
+        }, 10);
     };
     let speakers_added = 0;
     let interval_update = null;
@@ -48,6 +60,8 @@
         let status_resp = await fetch(`/api/${code}/status`);
         let status = await status_resp.text();
         if (status == '@live') {
+            clearInterval(ask_interval);
+            prog.style.display = 'none';
             let spkrdescs = document.getElementsByClassName('spkrdesc');
             let guesslinks = document.getElementsByClassName('guesslink');
             let speakers_resp = await fetch(`/api/${code}/speakers`);
