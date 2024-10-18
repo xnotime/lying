@@ -51,8 +51,21 @@ def join():
 @app.route('/joined/<code>/<role>/<ne>')
 def joined(code: str, role: str, ne: str):
     assert role in ('speaker', 'judge')
+    assert code in games
     return render_template(f'joined_{role}.html', code= code, ne= ne)
 
 @app.route('/api/<code>/start')
 def api_start(code: str):
-    return games[code].start_game()
+    assert code in games
+    games[code].start_game()
+    return 'ok'
+
+@app.route('/api/<code>/chosen/article')
+def api_chosen_article(code: str):
+    assert code in games
+    return games[code].chosen_article()
+
+@app.route('/api/<code>/status')
+def api_status(code: str):
+    assert code in games
+    return games[code].status()

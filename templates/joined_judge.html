@@ -25,9 +25,20 @@
     <script type="text/javascript">
     let readylink = document.getElementById('readylink');
     let articlename = document.getElementById('articlename');
+    let code = '{{ code }}'; // kinda xss-y but should be fine
     readylink.onclick = async () => {
-        let resp = await fetch(`/api/${code}/start`);
-        let article = await resp.text();
+        let status = '@not-started';
+        let issued_start = false;
+        while (status == '@not-started') {
+            let status_resp = await fetch(`/api/${code}/status`);
+            status = await status_resp.text();
+            if (status == '@not-started' && !issued_start) {
+                await fetch(`/api/${code}/start`);
+                issued_start = true;
+            }
+        }
+        let article_resp = await fetch(`/api/${code}/chosen/article`);
+        let article = await article_resp.text();
         articlename.innerHTML = article;
     };
     </script>

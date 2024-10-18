@@ -18,7 +18,7 @@ class Game:
         self.code = code
         self.judge = judge_nick_enc
         self.speakers = []
-        self.article = None
+        self.chosen = None
     
     def add_speaker(self, new_speaker: Speaker):
         self.speakers.append(new_speaker)
@@ -26,10 +26,13 @@ class Game:
     def start_game(self):
         # Choose a speaker who will tell the truth
         self.chosen = randrange(0, len(self.speakers))
-        # Only tell the judge the chosen article
-        return self.chosen_article()
     
     def chosen_article(self):
         if self.chosen is None:
             return None
         return self.speakers[self.chosen].wlink
+    
+    def status(self):
+        if self.chosen is None:
+            return '@not-started'
+        return 'okey dokey'
