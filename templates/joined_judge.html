@@ -44,19 +44,32 @@
     };
     let speakers_added = 0;
     setInterval(async () => {
-        let speakers_resp = await fetch(`/api/${code}/speakers`);
-        let speakers_json = await speakers_resp.json();
-        console.log(speakers_json);
-        let speakers_found = speakers_json['list'];
-        if (speakers_found.length > speakers_added) {
-            for (const new_speaker of speakers_found.slice(speakers_added)) {
-                let name = atob(new_speaker.ne);
-                let desc = new_speaker.desc;
-                let new_card = document.createElement('article');
-                new_card.innerText = name;
-                speakers.appendChild(new_card);
+        let status_resp = await fetch(`/api/${code}/status`);
+        let status = await status_resp.text();
+        if (status == '@live') {
+            let spkrdescs = document.getElementsByClassName('spkrdesc');
+            let guesslinks = document.getElementsByClassName('guesslink');
+        } else {
+            let speakers_resp = await fetch(`/api/${code}/speakers`);
+            let speakers_json = await speakers_resp.json();
+            console.log(speakers_json);
+            let speakers_found = speakers_json['list'];
+            if (speakers_found.length > speakers_added) {
+                for (const new_speaker of speakers_found.slice(speakers_added)) {
+                    let ne = new_speaker.ne;
+                    let name = atob(ne);
+                    let desc = new_speaker.desc;
+                    let new_card = document.createElement('article');
+                    new_card.innerHTML = `
+                        <strong>${name}</strong> says
+                        <strong ><span class="spkrdesc" data-ne="${ne}">...</span></strong>
+                        <br>
+                        <a class="guesslink" data-ne="${ne}">Guess them!</a>
+                    `;
+                    speakers.appendChild(new_card);
+                }
+                speakers_added = speakers_found.length;
             }
-            speakers_added = speakers_found.length;
         }
     }, 250);
     </script>
