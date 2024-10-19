@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lying</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" integrity="sha384-7P0NVe9LPDbUCAF+fH2R8Egwz1uqNH83Ns/bfJY0fN2XCDBMUI2S9gGzIOIRBKsA" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.4/dist/howler.min.js" integrity="sha384-SSf4pKRrGaeWL8bdA89QvGkhZo5WvIVCGwKVzfX7z+9sSaIHtE/AkOLehofI4JVY" crossorigin="anonymous"></script>
     <style>html { margin: 20px; } .ch { text-align: center; } .aa { display: flex; width: fit-content; margin-inline: auto; } .aa h1 { margin: 0; font-size: 65pt; } .sub { font-size: 50pt; } .guesslink { font-size: 30pt; }</style>
 </head>
 <body>
@@ -31,6 +32,24 @@
     let ask_interval;
     let time_left = 10_000;
     let code = '{{ code }}'; // kinda xss-y but should be fine
+    let sound_menu = new Howl({
+        loop: true,
+        src: ['/static/main_menu.mp3'],
+    });
+    let sound_beep = new Howl({
+        volume: 0.5,
+        src: ['/static/beepbeep.mp3'],
+    });
+    let sound_glitch = new Howl({
+        volume: 5.0,
+        src: ['/static/shortglitch.mp3'],
+    });
+    let sound_live = new Howl({
+        loop: true,
+        src: ['/static/detroit_city_ambient.mp3'],
+    });
+    sound_menu.play();
+    let last_beep_time_left = 11_000;
     readylink.onclick = async () => {
         let status = '@not-started';
         let issued_start = false;
@@ -48,19 +67,26 @@
         prog.style.display = 'inline';
         ask_interval = setInterval(() => {
             if (time_left > 0) {
-                console.log(time_left);
                 prog.value = `${(time_left / 10_000)}`;
+                if ((last_beep_time_left - time_left) > 1000) {
+                    last_beep_time_left = time_left;
+                    sound_beep.play();
+                }
                 time_left -= 10;
             }
         }, 10);
     };
     let speakers_added = 0;
     let interval_update = null;
+    let reveal = false;
     interval_update = setInterval(async () => {
         let status_resp = await fetch(`/api/${code}/status`);
         let status = await status_resp.text();
         if (status == '@live') {
             clearInterval(ask_interval);
+            sound_menu.stop();
+            sound_glitch.play();
+            sound_live.play();
             prog.style.display = 'none';
             let spkrdescs = document.getElementsByClassName('spkrdesc');
             let guesslinks = document.getElementsByClassName('guesslink');
@@ -77,7 +103,6 @@
                 let ne = spkrdesc.attributes['data-ne'].nodeValue;
                 bindings.get(ne).spkrdesc = spkrdesc;
             }
-            console.log(bindings);
             for (const [ne, obj] of bindings) {
                 if (obj.spkr.desc) {
                     obj.spkrdesc.innerText = obj.spkr.desc;
