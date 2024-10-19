@@ -99,17 +99,31 @@
                     spkrdesc: null,
                 });
             }
+            let max_desc_len = '[no response]'.length;
             for (const spkrdesc of spkrdescs) {
                 let ne = spkrdesc.attributes['data-ne'].nodeValue;
+                if (spkrdesc.length > max_desc_len) {
+                    max_desc_len = spkrdesc.length;
+                }
                 bindings.get(ne).spkrdesc = spkrdesc;
             }
-            for (const [ne, obj] of bindings) {
-                if (obj.spkr.desc) {
-                    obj.spkrdesc.innerText = obj.spkr.desc;
+            let type_interval;
+            let idx = 0;
+            type_interval = setInterval(() => {
+                console.log(idx);
+                if (idx > max_desc_len) {
+                    clearInterval(type_interval);
                 } else {
-                    obj.spkrdesc.innerText = '[no response]';
+                    for (const [ne, obj] of bindings) {
+                        if (obj.spkr.desc) {
+                            obj.spkrdesc.innerText = obj.spkr.desc.substring(0, idx);
+                        } else {
+                            obj.spkrdesc.innerText = '[no response]'.substring(0, idx);
+                        }
+                    }
+                    idx++;
                 }
-            }
+            }, (sound_glitch.duration() * 1000) / (max_desc_len + 5));
             for (const guesslink of guesslinks) {
                 let ne = guesslink.attributes['data-ne'].nodeValue;
                 guesslink.style.display = 'inline';
