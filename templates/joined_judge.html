@@ -48,6 +48,14 @@
         loop: true,
         src: ['/static/detroit_city_ambient.mp3'],
     });
+    let sounds_guess = {
+        red: new Howl({
+            src: ['/static/scifipowerdown.mp3'],
+        }),
+        green: new Howl({
+            src: ['/static/dramaticriser.mp3'],
+        }),
+    };
     sound_menu.play();
     let last_beep_time_left = 11_000;
     readylink.onclick = async () => {
@@ -131,6 +139,7 @@
                     let color = await guess_resp.text();
                     guesslink.parentElement.style.color = color;
                     guesslink.style.display = 'none';
+                    sounds_guess[color].play();
                 };
             }
             while (interval_update == null) {}
