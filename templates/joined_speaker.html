@@ -29,8 +29,9 @@
     let prog = document.getElementById('progress-2');
     let subheading = document.getElementById('subheading');
     let code = "{{ code }}";
+    let time = parseInt('{{ time }}');
     let ask_interval = null;
-    let time_left = 10_000;
+    let time_left = time * 1000;
     if (window.location.hash == '#submitted') {
         msg.innerText = 'Explain yourself, mortal!';
         form.style.display = 'none';
@@ -58,7 +59,7 @@
                     ask_interval = setInterval(() => {
                         if (time_left > 0) {
                             console.log(time_left);
-                            prog.value = `${(time_left / 10_000)}`;
+                            prog.value = `${(time_left / (time * 1000))}`;
                             time_left -= 10;
                         }
                     }, 10);

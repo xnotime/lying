@@ -25,12 +25,13 @@
         </section>
     </main>
     <script type="text/javascript">
+    let time = parseInt('{{ time }}');
     let readylink = document.getElementById('readylink');
     let articlename = document.getElementById('articlename');
     let speakers = document.getElementById('speakers');
     let prog = document.getElementById('progress-1');
     let ask_interval;
-    let time_left = 10_000;
+    let time_left = time * 1000;
     let code = '{{ code }}'; // kinda xss-y but should be fine
     let sound_menu = new Howl({
         loop: true,
@@ -80,7 +81,7 @@
         prog.style.display = 'inline';
         ask_interval = setInterval(() => {
             if (time_left > 0) {
-                prog.value = `${(time_left / 10_000)}`;
+                prog.value = `${(time_left / (time * 1000))}`;
                 if ((last_beep_time_left - time_left) > 1000) {
                     last_beep_time_left = time_left;
                     sound_beep.play();
